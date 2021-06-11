@@ -85,12 +85,17 @@ int sha256_traced(Digest &digest, const fs::path &path, ot::Tracer &tracer,
     std::vector<std::pair<fs::path, Digest>> children;
     const auto options = fs::directory_options::skip_permission_denied;
     for (const auto &entry : fs::directory_iterator(path, options)) {
-      if (!fs::is_symlink(path)) {
-        Digest hash;
-        if (sha256_traced(hash, entry, tracer, span->context()) == 0) {
-          children.emplace_back(entry, hash);
-        }
+      if (fs::is_symlink(path)) {
+        continue;
       }
+      Digest hash;
+      const fs::path &child = entry;
+      if (sha256_traced(hash, child, tracer, span->context())) {
+        span->SetTag("error",
+                     "unable to calculate digest of " + child.u8string());
+        return 1;
+      }
+      children.emplace_back(child, hash);
     }
     span->SetTag("number_of_children_included", children.size());
     digest = sha256(children);
