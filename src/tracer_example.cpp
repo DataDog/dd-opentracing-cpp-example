@@ -35,8 +35,8 @@ std::uint64_t checksum64_traced(const fs::path &path, ot::Tracer &tracer,
   if (fs::is_directory(path)) {
     const auto span =
         tracer.StartSpan("checksum64.directory", {ot::ChildOf(&context)});
-    span->SetTag("file_name", path.string());
-    span->SetTag("directory_name", path.string());
+    span->SetTag("file_name", path.u8string());
+    span->SetTag("directory_name", path.u8string());
     std::uint64_t number_of_children_included = 0;
     std::uint64_t total = 0;
     const auto options = fs::directory_options::skip_permission_denied;
@@ -52,7 +52,7 @@ std::uint64_t checksum64_traced(const fs::path &path, ot::Tracer &tracer,
   } else if (fs::is_regular_file(path)) {
     const auto span =
         tracer.StartSpan("checksum64.file", {ot::ChildOf(&context)});
-    span->SetTag("file_name", path.string());
+    span->SetTag("file_name", path.u8string());
     span->SetTag("file_size_bytes", fs::file_size(path));
     const std::uint64_t total = checksum64_file(path);
     span->SetTag("checksum64", total);
@@ -86,7 +86,7 @@ int main() {
     // Create a root span for the current request.
     const auto root = tracer->StartSpan("checksum64.request");
     root->SetTag(datadog::tags::environment, "production");
-    root->SetTag("directory_name", path.string());
+    root->SetTag("directory_name", path.u8string());
     const std::uint64_t checksum =
         checksum64_traced(path, *tracer, root->context());
     root->SetTag("checksum64", checksum);
