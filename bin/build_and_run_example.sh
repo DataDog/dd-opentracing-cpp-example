@@ -13,7 +13,7 @@ container_id=$(docker-compose ps --quiet dd-opentracing-cpp-example)
 
 # The example command line tool can only see its own file system
 # (good choices for a directory are "/var/log" and "/src").
-printf "enter a directory (ctrl+d to quit): "
+printf "enter a file or directory (ctrl+d to quit): "
 docker attach "$container_id"
 
 # Now that the example command line tool has exited, give the agent a few

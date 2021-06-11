@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e # exit if a non-conditional command fails
+set -e # exit if a nonconditional command fails
 
 # Gets the latest release version number from Github.
 get_latest_release() {
