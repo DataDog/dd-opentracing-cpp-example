@@ -1,3 +1,6 @@
+> [!WARNING]
+> Datadog OpenTracing for C++ is deprecated. Please use [dd-trace-cpp](https://github.com/DataDog/dd-trace-cpp/tree/main).
+
 C++ Example
 ===========
 Here's an example of using Datadog's OpenTracing implementation to add tracing
